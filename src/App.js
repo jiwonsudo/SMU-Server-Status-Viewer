@@ -72,6 +72,7 @@ function App() {
             key={siteInfo.title}
             title={siteInfo.title}
             url={siteInfo.url}
+            href={siteInfo.url}
             statusMsg={statusData[index]?.statusMsg || '서버 확인 중...'}
             statusColor={statusData[index]?.statusColor || '#f0ad4e'}
             responseTime={statusData[index]?.responseTime || '응답 확인 중...'}

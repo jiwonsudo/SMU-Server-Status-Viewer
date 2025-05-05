@@ -19,10 +19,11 @@ const VStack = styled.div`
   display: block;
 `;
 
-const Title = styled.div`
+const Title = styled.a`
   color: black;
   font-size: 1.1em;
   font-weight: 600;
+  text-decoration: none;
 `;
 
 const Url = styled.div`
@@ -52,7 +53,7 @@ const StatusBar = (props) => {
     <Background>
       <HStack>
         <VStack>
-          <Title>{props.title}</Title>
+          <Title href={props.href} target='_blank'>{props.title}</Title>
           <Url>{props.url}</Url>
         </VStack>
         <VStack>
