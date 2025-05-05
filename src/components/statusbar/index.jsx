@@ -42,6 +42,11 @@ const StatusLight = styled.div`
   background-color: ${(props) => props.color};
 `
 
+const ResponseTime = styled.div`
+  color: #adadad;
+  font-size: 0.7em;
+`;
+
 const StatusBar = (props) => {
   return (
     <Background>
@@ -55,6 +60,7 @@ const StatusBar = (props) => {
             <StatusMsg>{props.statusMsg}</StatusMsg>
             <StatusLight color={props.statusColor}></StatusLight>
           </HStack>
+          <ResponseTime>{props.responseTime}</ResponseTime>
         </VStack>
       </HStack>
     </Background>
