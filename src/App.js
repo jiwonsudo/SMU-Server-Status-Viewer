@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { MainBg, Navbar, StatusBar } from './components';
+import { MainBg, Navbar, StatusBar, Footer } from './components';
 import axios from 'axios';
 
 function App() {
@@ -37,15 +37,15 @@ function App() {
             });
           })
           .catch((error) => {
-            let statusMsg = '서버 상태 점검 실패';
+            let statusMsg = '상태 점검 실패';
             let statusColor = '#d9534f'; // red
-            let responseTime = '알 수 없음';
+            let responseTime = '점검 실패';
 
             if (error.response && error.response.status === 429) {
-              statusMsg = '조금 후에 시도해 주세요.';
-              responseTime = '너무 자주 새로고침 하면 서버가 힘들어요.';
+              statusMsg = '잠시 후 시도';
+              responseTime = 'N/A';
             } else if (error.code === 'ECONNABORTED') {
-              statusMsg = '요청 시간이 초과되었습니다.';
+              statusMsg = '매우 느림(비정상)';
               responseTime = 'N/A';
             }
 
@@ -72,12 +72,13 @@ function App() {
             key={siteInfo.title}
             title={siteInfo.title}
             url={siteInfo.url}
-            statusMsg={statusData[index]?.statusMsg || '서버 상태 확인 중...'}
+            statusMsg={statusData[index]?.statusMsg || '서버 확인 중...'}
             statusColor={statusData[index]?.statusColor || '#f0ad4e'}
-            responseTime={statusData[index]?.responseTime || '응답 시간 계산 중...'}
+            responseTime={statusData[index]?.responseTime || '응답 확인 중...'}
           />
         ))}
       </MainBg>
+      <Footer/>
     </>
   );
 }
