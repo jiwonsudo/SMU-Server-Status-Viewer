@@ -35,7 +35,7 @@ function App() {
                 index,
                 statusMsg: message,
                 statusColor: color,
-                responseTime: responseTime === 'N/A' ? `${responseTime}ms` : `${responseTime}`,
+                responseTime: responseTime === 'N/A' ? `${responseTime}` : `${responseTime}ms`,
               };
             })
             .catch((error) => {
