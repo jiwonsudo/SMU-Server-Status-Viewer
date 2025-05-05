@@ -9,8 +9,7 @@ function App() {
     { statusMsg: null, statusColor: '#f0ad4e', responseTime: null }
   ]);
 
-  // const URL_ROOT = 'https://smu-server-status-viewer-be.onrender.com';
-  const URL_ROOT = 'https://symmetrical-space-barnacle-ggpj64qx7fp6j-5000.app.github.dev';
+  const URL_ROOT = 'https://smu-server-status-viewer-be.onrender.com';
 
   const siteInfos = useMemo (() => {
     return [
