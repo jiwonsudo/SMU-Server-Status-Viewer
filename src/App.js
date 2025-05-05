@@ -22,39 +22,57 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responses = await Promise.allSettled(
-          siteInfos.map(siteInfo =>
-            axios.get(`${URL_ROOT}${siteInfo.endpoint}`)
-          )
-        );
-  
-        const newStatusData = responses.map((result, index) => {
-          if (result.status === 'fulfilled') {
-            const { status, message, responseTime } = result.value.data;
-            let color = '#f0ad4e';  // default yellow
-            if (status === 'ok') color = '#5cb85c';  // green
-            else if (status === 'timeout') color = '#d9534f';  // red
-  
-            return {
-              statusMsg: message,
-              statusColor: color,
-              responseTime: `${responseTime}ms`
-            };
-          } else {
-            return {
-              statusMsg: '서버 상태 점검 실패',
-              statusColor: '#d9534f',
-              responseTime: '알 수 없음'
-            };
-          }
+        const promises = siteInfos.map((siteInfo, index) => {
+          return axios
+            .get(`${URL_ROOT}${siteInfo.endpoint}`)
+            .then((response) => {
+              const { status, message, responseTime } = response.data;
+              let color = '#f0ad4e'; // default yellow
+              if (status === 'ok') color = '#5cb85c'; // green
+              else if (status === 'timeout' || status === 'error') color = '#d9534f'; // red
+
+              return {
+                index,
+                statusMsg: message,
+                statusColor: color,
+                responseTime: responseTime === 'N/A' ? `${responseTime}ms` : `${responseTime}`,
+              };
+            })
+            .catch((error) => {
+              // error 처리
+              let statusMsg = '서버 상태 점검 실패';
+              let statusColor = '#d9534f'; // red
+              let responseTime = '알 수 없음';
+
+              if (error.response && error.response.status === 429) {
+                statusMsg = '조금 후에 시도해 주세요.';
+                responseTime = '너무 자주 새로고침 하면 서버가 힘들어요.';
+              } else if (error.code === 'ECONNABORTED') {
+                statusMsg = '요청 시간이 초과되었습니다.';
+                responseTime = 'N/A';
+              }
+
+              return { index, statusMsg, statusColor, responseTime };
+            });
         });
-  
+
+        // 결과를 기다리고 상태 업데이트
+        const results = await Promise.all(promises);
+        const newStatusData = new Array(3).fill({
+          statusMsg: '서버 상태 확인 중...',
+          statusColor: '#f0ad4e',
+          responseTime: '응답 시간 계산 중...',
+        });
+        results.forEach(({ index, statusMsg, statusColor, responseTime }) => {
+          newStatusData[index] = { statusMsg, statusColor, responseTime };
+        });
+
         setStatusData(newStatusData);
       } catch (error) {
         console.error('서버 상태 요청 중 오류 발생:', error);
       }
     };
-  
+
     fetchData();
   }, [siteInfos]);
 
